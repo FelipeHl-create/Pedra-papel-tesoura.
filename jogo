@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Pedra, Papel e Tesoura</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        .btn-choice {
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+        .btn-choice:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+    <div class="bg-white rounded-2xl shadow-xl p-6 sm:p-8 max-w-md w-full text-center">
+        
+        <!-- Título -->
+        <h1 class="text-3xl sm:text-4xl font-bold text-gray-800 mb-2">Pedra, Papel, Tesoura</h1>
+        <p class="text-gray-500 mb-6">Escolha sua jogada para desafiar o computador!</p>
+
+        <!-- Placar -->
+        <div class="flex justify-center space-x-8 mb-8 text-2xl font-semibold">
+            <div class="text-center">
+                <span class="text-blue-600" id="player-score">0</span>
+                <p class="text-sm text-gray-500">Você</p>
+            </div>
+            <div class="text-center">
+                <span class="text-red-600" id="computer-score">0</span>
+                <p class="text-sm text-gray-500">Computador</p>
+            </div>
+        </div>
+
+        <!-- Botões de Escolha -->
+        <div class="flex justify-center items-center space-x-4 mb-6">
+            <button id="pedra" class="btn-choice bg-blue-500 hover:bg-blue-600 text-white p-4 rounded-full text-4xl">✊</button>
+            <button id="papel" class="btn-choice bg-green-500 hover:bg-green-600 text-white p-4 rounded-full text-4xl">✋</button>
+            <button id="tesoura" class="btn-choice bg-red-500 hover:bg-red-600 text-white p-4 rounded-full text-4xl">✌️</button>
+        </div>
+
+        <!-- Resultados -->
+        <div id="result-container" class="min-h-[120px] flex flex-col justify-center items-center p-4 bg-gray-50 rounded-lg">
+            <p id="result-text" class="text-xl font-medium text-gray-700">O jogo vai começar...</p>
+            <p id="choices-text" class="text-gray-500 mt-2"></p>
+        </div>
+
+        <!-- Botão de Reiniciar -->
+         <button id="reset-button" class="mt-6 bg-gray-300 hover:bg-gray-400 text-gray-800 font-semibold py-2 px-4 rounded-lg transition-colors duration-200">
+            Reiniciar Jogo
+        </button>
+
+    </div>
+
+    <script>
+        // Elementos do DOM
+        const playerScoreEl = document.getElementById('player-score');
+        const computerScoreEl = document.getElementById('computer-score');
+        const resultTextEl = document.getElementById('result-text');
+        const choicesTextEl = document.getElementById('choices-text');
+        const rockButton = document.getElementById('pedra');
+        const paperButton = document.getElementById('papel');
+        const scissorsButton = document.getElementById('tesoura');
+        const resetButton = document.getElementById('reset-button');
+
+        // Variáveis do jogo
+        let playerScore = 0;
+        let computerScore = 0;
+        const choices = ['Pedra', 'Papel', 'Tesoura'];
+        const emojis = {'Pedra': '✊', 'Papel': '✋', 'Tesoura': '✌️'};
+
+        // Adiciona ouvintes de evento aos botões
+        rockButton.addEventListener('click', () => playGame('Pedra'));
+        paperButton.addEventListener('click', () => playGame('Papel'));
+        scissorsButton.addEventListener('click', () => playGame('Tesoura'));
+        resetButton.addEventListener('click', resetGame);
+
+        /**
+         * Função principal que executa uma rodada do jogo.
+         * @param {string} playerChoice - A escolha do jogador ('Pedra', 'Papel' ou 'Tesoura').
+         */
+        function playGame(playerChoice) {
+            // O computador faz uma escolha aleatória
+            const computerChoice = choices[Math.floor(Math.random() * choices.length)];
+            
+            // Determina o vencedor
+            let result = '';
+            if (playerChoice === computerChoice) {
+                result = 'É um empate!';
+            } else if (
+                (playerChoice === 'Pedra' && computerChoice === 'Tesoura') ||
+                (playerChoice === 'Papel' && computerChoice === 'Pedra') ||
+                (playerChoice === 'Tesoura' && computerChoice === 'Papel')
+            ) {
+                result = 'Você venceu!';
+                playerScore++;
+            } else {
+                result = 'Você perdeu!';
+                computerScore++;
+            }
+
+            // Atualiza a interface
+            updateUI(result, playerChoice, computerChoice);
+        }
+
+        /**
+         * Atualiza os elementos na tela com o resultado da rodada.
+         * @param {string} result - A mensagem de resultado ('Você venceu!', 'Você perdeu!', 'É um empate!').
+         * @param {string} playerChoice - A escolha do jogador.
+         * @param {string} computerChoice - A escolha do computador.
+         */
+        function updateUI(result, playerChoice, computerChoice) {
+            playerScoreEl.textContent = playerScore;
+            computerScoreEl.textContent = computerScore;
+            
+            resultTextEl.textContent = result;
+            choicesTextEl.textContent = `Você: ${emojis[playerChoice]} vs Computador: ${emojis[computerChoice]}`;
+
+            // Adiciona cor ao resultado para feedback visual
+            if (result.includes('venceu')) {
+                resultTextEl.className = 'text-xl font-medium text-green-600';
+            } else if (result.includes('perdeu')) {
+                resultTextEl.className = 'text-xl font-medium text-red-600';
+            } else {
+                resultTextEl.className = 'text-xl font-medium text-gray-700';
+            }
+        }
+        
+        /**
+         * Reinicia o placar e o texto do jogo.
+         */
+        function resetGame() {
+            playerScore = 0;
+            computerScore = 0;
+            playerScoreEl.textContent = '0';
+            computerScoreEl.textContent = '0';
+            resultTextEl.textContent = 'O jogo foi reiniciado!';
+            resultTextEl.className = 'text-xl font-medium text-gray-700';
+            choicesTextEl.textContent = 'Faça sua jogada.';
+        }
+
+    </script>
+
+</body>
+</html>
