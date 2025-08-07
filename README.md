@@ -59,4 +59,4 @@ Este é um projeto simples, mas que pode ser expandido. Algumas ideias para o fu
 
 [ ] Adicionar um modo de jogo contra outro jogador (no mesmo computador).
 
-Feito com ❤️ por [Seu Nome Aqui].
+Feito com ❤️ por Felipe HL.
