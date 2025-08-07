@@ -1,4 +1,4 @@
-#🗿📄✂️ Jogo: Pedra, Papel e Tesoura
+🗿📄✂️ Jogo: Pedra, Papel e Tesoura
 Jogo pedra, papel, tesoura.
 
 Um jogo clássico e simples de "Pedra, Papel e Tesoura" para jogar diretamente no navegador, criado com HTML, CSS (Tailwind) e JavaScript puro. Desafie o computador e teste a sua sorte!
